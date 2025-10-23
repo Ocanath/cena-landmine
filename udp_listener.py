@@ -45,7 +45,7 @@ def main():
 
     # Send a dummy packet to "wake up" the socket for broadcast reception (Windows quirk)
     try:
-        sock.sendto(b'fuck', ('10.0.4.255', UDP_PORT))
+        sock.sendto(b'fuck', ('10.0.4.255', UDP_PORT+1))
     except:
         pass  # Ignore errors
 
@@ -65,7 +65,7 @@ def main():
                 # Timeout allows Ctrl+C to be processed
                 # Send keepalive to prevent Windows from resetting broadcast reception
                 try:
-                    sock.sendto(b'', ('10.0.4.255', UDP_PORT))
+                    sock.sendto(b'', ('10.0.4.255', UDP_PORT+1))
                 except:
                     print("Error when sending keepalive packet")
                     pass
