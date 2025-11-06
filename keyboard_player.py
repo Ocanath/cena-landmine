@@ -57,20 +57,27 @@ class AudioPlayer:
             return None
 
     def set_max_volume(self):
-        """Set system volume to maximum (100%)."""
+        """Set system volume to maximum (100%) and unmute."""
         if self.volume_interface:
             try:
                 if not getattr(sys, 'frozen', False):
                     current = self.volume_interface.GetMasterVolumeLevelScalar()
+                    muted = self.volume_interface.GetMute()
                     print(f"  Current volume: {current:.0%}")
+                    print(f"  Currently muted: {muted}")
 
+                # Unmute if muted
+                self.volume_interface.SetMute(0, None)
+
+                # Set volume to max
                 self.volume_interface.SetMasterVolumeLevelScalar(1.0, None)
 
                 if not getattr(sys, 'frozen', False):
                     new = self.volume_interface.GetMasterVolumeLevelScalar()
                     print(f"  New volume: {new:.0%}")
+                    print(f"  Muted after: {self.volume_interface.GetMute()}")
                     if new >= 0.99:
-                        print("  ✓ Volume set to max")
+                        print("  ✓ Volume set to max and unmuted")
             except Exception as e:
                 if not getattr(sys, 'frozen', False):
                     print(f"  Error setting volume: {e}")
