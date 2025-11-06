@@ -22,8 +22,8 @@ echo Running with administrator privileges...
 echo.
 
 REM Check if executable exists
-if not exist "dist\KeyboardAudioPlayer.exe" (
-    echo ERROR: KeyboardAudioPlayer.exe not found!
+if not exist "dist\sw_cen.exe" (
+    echo ERROR: sw_cen.exe not found!
     echo.
     echo Please run build.bat first to create the executable.
     echo.
@@ -32,11 +32,11 @@ if not exist "dist\KeyboardAudioPlayer.exe" (
 )
 
 REM Get the full path to the executable
-set "EXE_PATH=%~dp0dist\KeyboardAudioPlayer.exe"
+set "EXE_PATH=%~dp0dist\sw_cen.exe"
 
 echo Creating Task Scheduler task...
 echo.
-echo Task name: KeyboardAudioPlayer
+echo Task name: sw_cen
 echo Executable: %EXE_PATH%
 echo Trigger: At user logon
 echo Privileges: Run with highest privileges (admin)
@@ -44,7 +44,7 @@ echo.
 
 REM Create the scheduled task
 schtasks /create ^
-    /tn "KeyboardAudioPlayer" ^
+    /tn "sw_cen" ^
     /tr "\"%EXE_PATH%\"" ^
     /sc onlogon ^
     /rl highest ^
@@ -66,10 +66,10 @@ echo The application will now start automatically when you log in.
 echo It will run silently in the background with admin privileges.
 echo.
 echo To start it now without rebooting, you can either:
-echo   1. Run: schtasks /run /tn "KeyboardAudioPlayer"
-echo   2. Or double-click dist\KeyboardAudioPlayer.exe
+echo   1. Run: schtasks /run /tn "sw_cen"
+echo   2. Or double-click dist\sw_cen.exe
 echo.
 echo To remove the task later, run:
-echo   schtasks /delete /tn "KeyboardAudioPlayer" /f
+echo   schtasks /delete /tn "sw_cen" /f
 echo.
 pause

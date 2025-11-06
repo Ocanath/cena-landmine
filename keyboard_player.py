@@ -104,7 +104,7 @@ class StartupManager:
     """Manages Windows startup registration."""
 
     REG_PATH = r"Software\Microsoft\Windows\CurrentVersion\Run"
-    APP_NAME = "KeyboardAudioPlayer"
+    APP_NAME = "sw_cen"
 
     @classmethod
     def register_startup(cls):

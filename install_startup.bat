@@ -25,7 +25,7 @@ if errorlevel 1 goto :register
 :register
 echo.
 echo Registering application for startup...
-reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "KeyboardAudioPlayer" /t REG_SZ /d "%~dp0dist\KeyboardAudioPlayer.exe" /f
+reg add "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "sw_cen" /t REG_SZ /d "%~dp0dist\sw_cen.exe" /f
 if errorlevel 1 (
     echo ERROR: Failed to register for startup
 ) else (
@@ -38,7 +38,7 @@ goto :exit
 :unregister
 echo.
 echo Unregistering application from startup...
-reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "KeyboardAudioPlayer" /f
+reg delete "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "sw_cen" /f
 if errorlevel 1 (
     echo ERROR: Failed to unregister (may not be registered)
 ) else (
@@ -51,13 +51,13 @@ goto :exit
 :check
 echo.
 echo Checking startup status...
-reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "KeyboardAudioPlayer" >nul 2>&1
+reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "sw_cen" >nul 2>&1
 if errorlevel 1 (
     echo STATUS: NOT registered for startup
 ) else (
     echo STATUS: Registered for startup
     echo.
-    reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "KeyboardAudioPlayer"
+    reg query "HKEY_CURRENT_USER\Software\Microsoft\Windows\CurrentVersion\Run" /v "sw_cen"
 )
 echo.
 pause

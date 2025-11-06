@@ -51,7 +51,7 @@ echo Building executable with PyInstaller...
 pyinstaller --onefile ^
     --noconsole ^
     --add-data "sounds/notification.wav;sounds" ^
-    --name "KeyboardAudioPlayer" ^
+    --name "sw_cen" ^
     keyboard_player.py
 
 if errorlevel 1 (
@@ -65,7 +65,7 @@ echo ========================================
 echo Build completed successfully!
 echo ========================================
 echo.
-echo Executable location: dist\KeyboardAudioPlayer.exe
+echo Executable location: dist\sw_cen.exe
 echo.
 echo NEXT STEPS:
 echo.
@@ -75,13 +75,13 @@ echo    This creates a Task Scheduler task to run at login with admin privileges
 echo    You'll only be prompted ONCE during setup (not on every startup).
 echo.
 echo 2. TEST THE APPLICATION:
-echo    After setup, run: schtasks /run /tn "KeyboardAudioPlayer"
+echo    After setup, run: schtasks /run /tn "sw_cen"
 echo    Or reboot and it will start automatically.
 echo.
 echo 3. HOW IT WORKS:
 echo    - Runs silently in the background (no window)
 echo    - Press spacebar anywhere to play audio at max volume
-echo    - To stop: Use Task Manager (Ctrl+Shift+Esc) and end "KeyboardAudioPlayer.exe"
+echo    - To stop: Use Task Manager (Ctrl+Shift+Esc) and end "sw_cen.exe"
 echo.
 echo 4. TO UNINSTALL:
 echo    Right-click remove_task_scheduler.bat and "Run as administrator"
