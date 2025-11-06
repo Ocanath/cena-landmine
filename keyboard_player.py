@@ -33,12 +33,17 @@ class AudioPlayer:
     """Manages audio playback and system volume control."""
 
     def __init__(self):
-        print("Initializing AudioPlayer...")
+        # Only print when running as script (not as bundled exe)
+        if not getattr(sys, 'frozen', False):
+            print("Initializing AudioPlayer...")
+
         self.volume_interface = self._get_volume_interface()
-        if self.volume_interface:
-            print("✓ Volume control initialized successfully")
-        else:
-            print("✗ Volume control failed - make sure running as administrator")
+
+        if not getattr(sys, 'frozen', False):
+            if self.volume_interface:
+                print("✓ Volume control initialized successfully")
+            else:
+                print("✗ Volume control failed - make sure running as administrator")
 
     def _get_volume_interface(self):
         """Get the Windows audio volume control interface."""
@@ -47,44 +52,52 @@ class AudioPlayer:
             # Newer pycaw API uses .EndpointVolume property directly
             return devices.EndpointVolume
         except Exception as e:
-            print(f"  Error: {type(e).__name__}: {e}")
+            if not getattr(sys, 'frozen', False):
+                print(f"  Error: {type(e).__name__}: {e}")
             return None
 
     def set_max_volume(self):
         """Set system volume to maximum (100%)."""
         if self.volume_interface:
             try:
-                current = self.volume_interface.GetMasterVolumeLevelScalar()
-                print(f"  Current volume: {current:.0%}")
+                if not getattr(sys, 'frozen', False):
+                    current = self.volume_interface.GetMasterVolumeLevelScalar()
+                    print(f"  Current volume: {current:.0%}")
 
                 self.volume_interface.SetMasterVolumeLevelScalar(1.0, None)
 
-                new = self.volume_interface.GetMasterVolumeLevelScalar()
-                print(f"  New volume: {new:.0%}")
-
-                if new >= 0.99:
-                    print("  ✓ Volume set to max")
+                if not getattr(sys, 'frozen', False):
+                    new = self.volume_interface.GetMasterVolumeLevelScalar()
+                    print(f"  New volume: {new:.0%}")
+                    if new >= 0.99:
+                        print("  ✓ Volume set to max")
             except Exception as e:
-                print(f"  Error setting volume: {e}")
+                if not getattr(sys, 'frozen', False):
+                    print(f"  Error setting volume: {e}")
 
     def play(self):
         """Play the audio file at max volume."""
-        print("\n[SPACEBAR PRESSED]")
+        if not getattr(sys, 'frozen', False):
+            print("\n[SPACEBAR PRESSED]")
 
         # Stop any currently playing audio first (restart from beginning)
         winsound.PlaySound(None, winsound.SND_PURGE)
 
         # Set volume to max
-        print("Setting volume to max...")
+        if not getattr(sys, 'frozen', False):
+            print("Setting volume to max...")
         self.set_max_volume()
 
         # Play audio asynchronously
-        print("Playing audio...")
+        if not getattr(sys, 'frozen', False):
+            print("Playing audio...")
         try:
             winsound.PlaySound(AUDIO_FILE, winsound.SND_FILENAME | winsound.SND_ASYNC)
-            print("✓ Audio started\n")
+            if not getattr(sys, 'frozen', False):
+                print("✓ Audio started\n")
         except Exception as e:
-            print(f"✗ Audio error: {e}\n")
+            if not getattr(sys, 'frozen', False):
+                print(f"✗ Audio error: {e}\n")
 
 
 class StartupManager:
@@ -170,29 +183,36 @@ class KeyboardMonitor:
 
 def main():
     """Main entry point."""
-    print("\n" + "="*50)
-    print("KEYBOARD AUDIO PLAYER")
-    print("="*50)
+    # Only print when running as script
+    if not getattr(sys, 'frozen', False):
+        print("\n" + "="*50)
+        print("KEYBOARD AUDIO PLAYER")
+        print("="*50)
 
     # Register for startup if not already registered
-    # if not StartupManager.is_registered():
-    #     StartupManager.register_startup()
+    if not StartupManager.is_registered():
+        StartupManager.register_startup()
 
     # Initialize audio player
     audio_player = AudioPlayer()
 
     # Start keyboard monitoring
-    print("\nStarting keyboard monitor...")
+    if not getattr(sys, 'frozen', False):
+        print("\nStarting keyboard monitor...")
+
     monitor = KeyboardMonitor(audio_player)
     monitor.start()
-    print("✓ Ready! Press SPACEBAR to play audio")
-    print("  (Press Ctrl+C to exit)\n")
+
+    if not getattr(sys, 'frozen', False):
+        print("✓ Ready! Press SPACEBAR to play audio")
+        print("  (Press Ctrl+C to exit)\n")
 
     # Keep the application running
     try:
         monitor.listener.join()
     except KeyboardInterrupt:
-        print("\nExiting...")
+        if not getattr(sys, 'frozen', False):
+            print("\nExiting...")
         monitor.stop()
 
 
