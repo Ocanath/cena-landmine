@@ -1,0 +1,4 @@
+pynput>=1.7.6
+pycaw>=20231129
+comtypes>=1.2.0
+pyinstaller>=6.0.0
