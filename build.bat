@@ -67,11 +67,23 @@ echo ========================================
 echo.
 echo Executable location: dist\KeyboardAudioPlayer.exe
 echo.
-echo To run the application:
-echo   1. Double-click dist\KeyboardAudioPlayer.exe
-echo   2. It will run in the background (no window)
-echo   3. Press spacebar to play audio at max volume
-echo   4. The app will auto-register for startup on first run
-echo   5. To stop it, use Task Manager (Ctrl+Shift+Esc)
+echo NEXT STEPS:
+echo.
+echo 1. SET UP AUTO-START (One-time, requires admin):
+echo    Right-click setup_task_scheduler.bat and "Run as administrator"
+echo    This creates a Task Scheduler task to run at login with admin privileges.
+echo    You'll only be prompted ONCE during setup (not on every startup).
+echo.
+echo 2. TEST THE APPLICATION:
+echo    After setup, run: schtasks /run /tn "KeyboardAudioPlayer"
+echo    Or reboot and it will start automatically.
+echo.
+echo 3. HOW IT WORKS:
+echo    - Runs silently in the background (no window)
+echo    - Press spacebar anywhere to play audio at max volume
+echo    - To stop: Use Task Manager (Ctrl+Shift+Esc) and end "KeyboardAudioPlayer.exe"
+echo.
+echo 4. TO UNINSTALL:
+echo    Right-click remove_task_scheduler.bat and "Run as administrator"
 echo.
 pause

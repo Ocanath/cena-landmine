@@ -35,6 +35,5 @@ exe = EXE(
     target_arch=None,
     codesign_identity=None,
     entitlements_file=None,
-    uac_admin=True,  # Request administrator privileges
-    uac_uiaccess=False,
+    # Note: Admin elevation handled via Task Scheduler, not UAC prompt
 )

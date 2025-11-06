@@ -189,9 +189,9 @@ def main():
         print("KEYBOARD AUDIO PLAYER")
         print("="*50)
 
-    # Register for startup if not already registered
-    if not StartupManager.is_registered():
-        StartupManager.register_startup()
+    # Note: Startup registration handled via Task Scheduler setup script
+    # if not StartupManager.is_registered():	#registry editor mark for startup
+    #     StartupManager.register_startup()
 
     # Initialize audio player
     audio_player = AudioPlayer()
