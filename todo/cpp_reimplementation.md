@@ -24,11 +24,11 @@ The task: C++ re-implementation of the sw_cen executable with some improvements.
 	- udp listening: port 6768, listen for `"AND HIS NAME IS..."`, trigger the audio playback subroutine on match. Should bind to 0.0.0.0. Should continue on error - udp listening is not essential, so do not abort program if the bind fails.
 	- keystroke: the space key should trigger the audio playback subroutine
 
-## Note on Key Logging
+### Note on Key Logging
 
 Rather than using an external dependency for this, a hand-rolled solution is preferred. This should exist in its own translation unit with macro logic for platform detection and implementation, and link statically to the rest of the project so it's easy to link to examples and standalone tests.
 
-## Note on Audio Asset
+### Note on Audio Asset
 
 The file asset to play is `notification.wav`, which can be found under `python/sounds/notification.wav`. The preferred method to bundle is to use xxd.
 The notification asset has already been produced as a header, directly from the tool use:
@@ -38,3 +38,27 @@ xxd -i python/sounds/notification.wav > cena.h
 ```
 
 miniaudio should be able to accept this array as an alternative to a filebuffer for playback.
+
+
+
+
+
+
+
+## Implementation Plan
+
+Implement the required functionality in the following stages. Each step requires review, compilation and testing before completion. At each stage, if testing passes, the code must be committed before continuing to the next step. 
+
+1. **Keylogger:**
+Implement a thin cross platform solution to background monitoring of keystrokes
+
+1. **Media playback:**
+Link `miniaudio` and set up the keystroke trigger via the bundled .wav header blob
+
+1. **Volume controls** 
+Implement system dependent volume maximization in a separate translation unit, e.g. `volume_maximizer.cpp` and `volume_maximizer.h`. Wire it as a step preceeding playback, as part of the playback subroutine which runs on trigger
+
+1. **Socket Trigger**
+Link tinycsocket and add socket creation, binding, and the udp socket command trigger.
+
+
