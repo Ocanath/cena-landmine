@@ -50,7 +50,7 @@ miniaudio should be able to accept this array as an alternative to a filebuffer 
 Implement the required functionality in the following stages. Each step requires review, compilation and testing before completion. At each stage, if testing passes, the code must be committed before continuing to the next step. 
 
 1. **Keylogger:**
-Implement a thin cross platform solution to background monitoring of keystrokes
+Implement a thin cross platform solution to background monitoring of keystrokes. Keystroke logger will be implemented as its own translation unit. The main entry point is created at this stage as well. The keystroke logger will be tested by registering on the space key, and committing some action when the key is pressed (i.e. `printf`).
 
 1. **Media playback:**
 Link `miniaudio` and set up the keystroke trigger via the bundled .wav header blob
