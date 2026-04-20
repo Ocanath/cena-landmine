@@ -14,16 +14,27 @@ The task: C++ re-implementation of the sw_cen executable with some improvements.
 
 1. Persistence: the executable must be persistent. This is accomplished by the deployment mechanism (duckyscript), so the software doesn't have to consider it.
 2. Cross-platform: the software should build for windows, linux, and macos clients. The duckyscript deployment script for windows is sufficient for now - we will consider badusb/duckyscript deployment for linux and macos clients later.
-3. Volume maximization: the software should attempt to maximize system volume before playing. If system volume is muted, it should unmute. 
+3. Volume maximization: the software should attempt to maximize system volume before playing. If system volume is muted, it should unmute. The python script accomplishes this for windows well - use this as a model. 
 4. Standalone executable: no external file resources. All assets must ship with the executable blob, including audio files
-5. Audio playback: the software should playback the software using an established audio playback library. Discuss this with the user.
-6. Dependency management/build toolchain: the project should submodule all dependencies and link them via cmake.  
+5. Audio playback: the software should playback the software using an established audio playback library. `miniaudio` is preferred for simplicity
+6. Dependency management/build toolchain: the project should submodule all dependencies and link them via cmake. Do not use FetchContent. 
+	- prefer miniaudio dependency for playback
+	- prefer tinycsocket for socket programming. 
 7. Triggers:
-	- udp listening: port 6768, listen for `"AND HIS NAME IS..."`, trigger the audio playback subroutine on match.
+	- udp listening: port 6768, listen for `"AND HIS NAME IS..."`, trigger the audio playback subroutine on match. Should bind to 0.0.0.0. Should continue on error - udp listening is not essential, so do not abort program if the bind fails.
 	- keystroke: the space key should trigger the audio playback subroutine
 
-The file asset to play is `notification.wav`, which can be found under `python/sounds/notification.wav`.
+## Note on Key Logging
 
+Rather than using an external dependency for this, a hand-rolled solution is preferred. This should exist in its own translation unit with macro logic for platform detection and implementation, and link statically to the rest of the project so it's easy to link to examples and standalone tests.
 
+## Note on Audio Asset
 
+The file asset to play is `notification.wav`, which can be found under `python/sounds/notification.wav`. The preferred method to bundle is to use xxd.
+The notification asset has already been produced as a header, directly from the tool use:
 
+```bash
+xxd -i python/sounds/notification.wav > cena.h
+```
+
+miniaudio should be able to accept this array as an alternative to a filebuffer for playback.
