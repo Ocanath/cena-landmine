@@ -11,7 +11,6 @@ int main() {
         fprintf(stderr, "audio_init() failed\n");
         return 1;
     }
-
     keylogger_register(KEY_SPACE, on_space);
 
     if (keylogger_start() != 0) {
@@ -21,7 +20,10 @@ int main() {
     }
 
     printf("Listening... press Enter to stop\n");
-    getchar();
+    while(1)
+	{
+		getchar();
+	}
 
     keylogger_stop();
     audio_cleanup();

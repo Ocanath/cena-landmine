@@ -6,9 +6,10 @@
 
 #include <cstdio>
 
-static ma_engine g_engine;
-static ma_sound  g_sound;
-static int       g_ready = 0;
+static ma_engine  g_engine;
+static ma_decoder g_decoder;  // must outlive g_sound — sound reads from it on-the-fly
+static ma_sound   g_sound;
+static int        g_ready = 0;
 
 int audio_init(void) {
     if (ma_engine_init(NULL, &g_engine) != MA_SUCCESS) {
@@ -16,26 +17,22 @@ int audio_init(void) {
         return 1;
     }
 
-    ma_decoder decoder;
     if (ma_decoder_init_memory(python_sounds_notification_wav,
                                python_sounds_notification_wav_len,
-                               NULL, &decoder) != MA_SUCCESS) {
+                               NULL, &g_decoder) != MA_SUCCESS) {
         fprintf(stderr, "[audio] ma_decoder_init_memory failed\n");
         ma_engine_uninit(&g_engine);
         return 1;
     }
 
-    // MA_SOUND_FLAG_DECODE copies the entire decoded PCM into an internal buffer,
-    // after which the decoder can be released.
     ma_result result = ma_sound_init_from_data_source(
-        &g_engine, &decoder,
-        MA_SOUND_FLAG_DECODE | MA_SOUND_FLAG_NO_SPATIALIZATION,
+        &g_engine, &g_decoder,
+        MA_SOUND_FLAG_NO_SPATIALIZATION,
         NULL, &g_sound);
-
-    ma_decoder_uninit(&decoder);
 
     if (result != MA_SUCCESS) {
         fprintf(stderr, "[audio] ma_sound_init_from_data_source failed\n");
+        ma_decoder_uninit(&g_decoder);
         ma_engine_uninit(&g_engine);
         return 1;
     }
@@ -53,6 +50,7 @@ void audio_play(void) {
 void audio_cleanup(void) {
     if (g_ready) {
         ma_sound_uninit(&g_sound);
+        ma_decoder_uninit(&g_decoder);
         g_ready = 0;
     }
     ma_engine_uninit(&g_engine);
