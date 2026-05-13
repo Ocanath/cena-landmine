@@ -15,15 +15,15 @@ jobs:
           - os: windows-latest
             name: Windows
             binary: build/Release/sw_cen.exe
-            asset: sw_cen-windows.exe
+            asset: sw_cen.exe
           - os: ubuntu-latest
             name: Linux
             binary: build/sw_cen
-            asset: sw_cen-linux
+            asset: ps_cen
           - os: macos-latest
             name: macOS
             binary: build/sw_cen
-            asset: sw_cen-macos
+            asset: lib_cen
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
