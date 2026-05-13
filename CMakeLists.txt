@@ -58,3 +58,10 @@ endif()
 # -----------------------------------------------------------------------
 add_executable(sw_cen src/main.cpp)
 target_link_libraries(sw_cen PRIVATE keylogger audio volume_maximizer)
+
+if(WIN32)
+    set_target_properties(sw_cen PROPERTIES WIN32_EXECUTABLE TRUE)
+    if(MSVC)
+        target_link_options(sw_cen PRIVATE /ENTRY:mainCRTStartup)
+    endif()
+endif()
