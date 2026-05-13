@@ -1,4 +1,5 @@
 #include <cstdio>
+#include <cstring>
 #include "keylogger.h"
 #include "audio.h"
 #include "volume_maximizer.h"
@@ -12,10 +13,18 @@ static void on_space(keylogger_key_t) {
     audio_play();
 }
 
-static void cb_enable(void)  { g_space_enabled = 1; }
-static void cb_disable(void) { g_space_enabled = 0; }
-static void cb_trigger(void) { volume_maximize(); audio_play(); }
-static void cb_stop(void)    { audio_stop(); }
+static void cb_enable(buffer_t* reply)
+{
+	g_space_enabled = 1;
+	snprintf(reply->data, reply->size, "cena landmine enabled");
+}
+static void cb_disable(buffer_t* reply)
+{
+	g_space_enabled = 0;
+	snprintf(reply->data, reply->size, "cena landmine disabled");
+}
+static void cb_trigger(buffer_t*) { volume_maximize(); audio_play(); }
+static void cb_stop(buffer_t*)    { audio_stop(); }
 
 int main() {
     if (audio_init() != 0) {

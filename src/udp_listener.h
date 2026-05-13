@@ -5,10 +5,15 @@ extern "C" {
 #endif
 
 typedef struct {
-    void (*on_enable)(void);
-    void (*on_disable)(void);
-    void (*on_trigger)(void);
-    void (*on_stop)(void);
+    char* data;
+    size_t   size;
+} buffer_t;
+
+typedef struct {
+    void (*on_enable)(buffer_t* reply);
+    void (*on_disable)(buffer_t* reply);
+    void (*on_trigger)(buffer_t* reply);
+    void (*on_stop)(buffer_t* reply);
 } udp_callbacks_t;
 
 // Bind to 0.0.0.0:7878 and spawn a listener thread. Returns 0 on success.

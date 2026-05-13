@@ -16,6 +16,7 @@
 #  define sock_close   closesocket
    static void sock_init(void)    { WSADATA w; WSAStartup(MAKEWORD(2,2), &w); }
    static void sock_cleanup(void) { WSACleanup(); }
+   typedef int socklen_t;
    static void set_recv_timeout(sock_t s) {
        DWORD ms = 500;
        setsockopt(s, SOL_SOCKET, SO_RCVTIMEO, (const char*)&ms, sizeof(ms));
@@ -69,16 +70,53 @@ static void listener_loop(void) {
     }
 
     char buf[BUF_SIZE];
-    while (g_running) {
-        int n = (int)recvfrom(s, buf, BUF_SIZE - 1, 0, NULL, NULL);
+    char reply_buf[BUF_SIZE];
+    struct sockaddr_in sender;
+    socklen_t sender_len = sizeof(sender);
+
+    buffer_t reply = { reply_buf, BUF_SIZE };
+
+    while (g_running)
+	{
+        int n = (int)recvfrom(s, buf, BUF_SIZE - 1, 0, (struct sockaddr*)&sender, &sender_len);
         if (n <= 0) continue; // timeout or error — check g_running and loop
 
         buf[n] = '\0';
+        reply_buf[0] = '\0';
 
-        if      (strcmp(buf, "enable cena landmine") == 0)  { if (g_cbs.on_enable)  g_cbs.on_enable();  }
-        else if (strcmp(buf, "disable cena landmine") == 0) { if (g_cbs.on_disable) g_cbs.on_disable(); }
-        else if (strcmp(buf, "trigger cena") == 0)          { if (g_cbs.on_trigger) g_cbs.on_trigger(); }
-        else if (strcmp(buf, "stop cena") == 0)             { if (g_cbs.on_stop)    g_cbs.on_stop();    }
+        if (strcmp(buf, "enable cena landmine") == 0)
+		{
+			if (g_cbs.on_enable)
+			{
+				g_cbs.on_enable(&reply);
+			}
+		}
+		else if (strcmp(buf, "disable cena landmine") == 0)
+		{
+			if (g_cbs.on_disable)
+			{
+				g_cbs.on_disable(&reply);
+			}
+		}
+		else if (strcmp(buf, "trigger cena") == 0)
+		{
+			if (g_cbs.on_trigger)
+			{
+				g_cbs.on_trigger(&reply);
+			}
+		}
+		else if (strcmp(buf, "stop cena") == 0)
+		{
+			if (g_cbs.on_stop)
+			{
+				g_cbs.on_stop(&reply);
+			}
+		}
+
+		if (reply_buf[0] != '\0')
+		{
+			sendto(s, reply_buf, (int)strlen(reply_buf), 0, (struct sockaddr*)&sender, sender_len);
+		}
     }
 
     sock_close(s);
