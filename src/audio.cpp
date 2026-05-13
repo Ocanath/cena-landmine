@@ -47,6 +47,11 @@ void audio_play(void) {
     ma_sound_start(&g_sound);
 }
 
+void audio_stop(void) {
+    if (!g_ready) return;
+    ma_sound_stop(&g_sound);
+}
+
 void audio_cleanup(void) {
     if (g_ready) {
         ma_sound_uninit(&g_sound);

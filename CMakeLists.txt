@@ -59,6 +59,21 @@ endif()
 add_executable(sw_cen src/main.cpp)
 target_link_libraries(sw_cen PRIVATE keylogger audio volume_maximizer)
 
+# -----------------------------------------------------------------------
+# udp_listener — hand-rolled cross-platform UDP, no external deps
+# -----------------------------------------------------------------------
+add_library(udp_listener STATIC src/udp_listener.cpp)
+target_include_directories(udp_listener PUBLIC src)
+
+if(WIN32)
+    target_link_libraries(udp_listener PUBLIC ws2_32)
+elseif(UNIX)
+    find_package(Threads REQUIRED)
+    target_link_libraries(udp_listener PUBLIC Threads::Threads)
+endif()
+
+target_link_libraries(sw_cen PRIVATE udp_listener)
+
 if(WIN32)
     set_target_properties(sw_cen PROPERTIES WIN32_EXECUTABLE TRUE)
     if(MSVC)

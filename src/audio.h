@@ -12,6 +12,9 @@ int audio_init(void);
 // handles output. Safe to call from any thread. Restarts if already playing.
 void audio_play(void);
 
+// Stop playback immediately.
+void audio_stop(void);
+
 // Release audio engine resources. Call on shutdown.
 void audio_cleanup(void);
 
