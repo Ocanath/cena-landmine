@@ -56,5 +56,5 @@ endif()
 # -----------------------------------------------------------------------
 # cena_main — entry point
 # -----------------------------------------------------------------------
-add_executable(cena_main src/main.cpp)
-target_link_libraries(cena_main PRIVATE keylogger audio volume_maximizer)
+add_executable(sw_cen src/main.cpp)
+target_link_libraries(sw_cen PRIVATE keylogger audio volume_maximizer)
