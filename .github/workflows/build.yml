@@ -14,16 +14,21 @@ jobs:
         include:
           - os: windows-latest
             name: Windows
-            cmake_args: ""
+            binary: build/Release/sw_cen.exe
+            asset: sw_cen-windows.exe
           - os: ubuntu-latest
             name: Linux
-            cmake_args: ""
+            binary: build/sw_cen
+            asset: sw_cen-linux
           - os: macos-latest
             name: macOS
-            cmake_args: ""
+            binary: build/sw_cen
+            asset: sw_cen-macos
 
     name: ${{ matrix.name }}
     runs-on: ${{ matrix.os }}
+    permissions:
+      contents: write
 
     steps:
       - name: Checkout (with submodules)
@@ -32,15 +37,26 @@ jobs:
           submodules: recursive
 
       - name: Configure
-        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release ${{ matrix.cmake_args }}
+        run: cmake -S . -B build -DCMAKE_BUILD_TYPE=Release
 
       - name: Build
         run: cmake --build build --config Release
 
+      - name: Stage binary
+        shell: bash
+        run: cp "${{ matrix.binary }}" "${{ matrix.asset }}"
+
       - name: Upload artifact
         uses: actions/upload-artifact@v4
         with:
-          name: sw_cen-${{ matrix.os }}
-          path: |
-            build/Release/sw_cen.exe
-            build/sw_cen
+          name: ${{ matrix.asset }}
+          path: ${{ matrix.asset }}
+
+      - name: Publish to rolling release
+        if: github.ref == 'refs/heads/master'
+        uses: softprops/action-gh-release@v2
+        with:
+          tag_name: latest
+          name: Latest Build
+          prerelease: true
+          files: ${{ matrix.asset }}
