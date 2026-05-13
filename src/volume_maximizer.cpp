@@ -52,12 +52,15 @@ void volume_maximize(void) {
 }
 
 // =========================================================================
-// Linux — not yet implemented
+// Linux — pactl (PulseAudio / PipeWire)
 // =========================================================================
 #elif defined(__linux__)
 
+#include <cstdlib>
+
 void volume_maximize(void) {
-    // TODO: implement via pactl / amixer
+    system("pactl set-sink-mute @DEFAULT_SINK@ 0");
+    system("pactl set-sink-volume @DEFAULT_SINK@ 100%");
 }
 
 // =========================================================================
