@@ -23,8 +23,17 @@ static void cb_disable(buffer_t* reply)
 	g_space_enabled = 0;
 	snprintf(reply->data, reply->size, "cena landmine disabled");
 }
-static void cb_trigger(buffer_t*) { volume_maximize(); audio_play(); }
-static void cb_stop(buffer_t*)    { audio_stop(); }
+static void cb_trigger(buffer_t*reply) 
+{
+	volume_maximize();
+	audio_play();
+	snprintf(reply->data, reply->size, "and his name is...");
+}
+static void cb_stop(buffer_t*reply)    
+{ 
+	audio_stop(); 
+	snprintf(reply->data, reply->size, "THERE IS NO WRESTLING IN THIS HOUSE");
+}
 
 int main() {
     if (audio_init() != 0) {
