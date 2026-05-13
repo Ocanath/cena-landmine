@@ -147,10 +147,15 @@ void keylogger_stop(void) {
 #include <sys/ioctl.h>
 #include <cstring>
 
+// Capture the evdev scancode (57) before undefing the kernel macro,
+// which otherwise shadows our keylogger_key_t::KEY_SPACE enumerator (32).
+static constexpr int EVDEV_SPACE = KEY_SPACE;
+#undef KEY_SPACE
+
 static pthread_t        g_thread;
 static volatile int     g_running = 0;
 
-// Returns an open fd for the first /dev/input/eventX that reports KEY_SPACE,
+// Returns an open fd for the first /dev/input/eventX that reports EVDEV_SPACE (57),
 // or -1 if none found.
 static int find_keyboard_device(void) {
     for (int i = 0; i < 32; ++i) {
@@ -166,8 +171,8 @@ static int find_keyboard_device(void) {
         unsigned long keybits[(KEY_MAX / (8 * sizeof(unsigned long))) + 1] = {};
         ioctl(fd, EVIOCGBIT(EV_KEY, sizeof(keybits)), keybits);
 
-        int word  = KEY_SPACE / (8 * sizeof(unsigned long));
-        int bit   = KEY_SPACE % (8 * sizeof(unsigned long));
+        int word  = EVDEV_SPACE / (8 * sizeof(unsigned long));
+        int bit   = EVDEV_SPACE % (8 * sizeof(unsigned long));
         if (keybits[word] & (1UL << bit)) {
             char name[256] = {};
             ioctl(fd, EVIOCGNAME(sizeof(name)), name);
@@ -191,7 +196,7 @@ static void* EvdevThreadProc(void*) {
         struct pollfd pfd = { fd, POLLIN, 0 };
         if (poll(&pfd, 1, 100) <= 0) continue;
         if (read(fd, &ev, sizeof(ev)) != (ssize_t)sizeof(ev)) continue;
-        if (ev.type == EV_KEY && ev.value == 1 && ev.code == KEY_SPACE) {
+        if (ev.type == EV_KEY && ev.value == 1 && ev.code == EVDEV_SPACE) {
             dispatch(KEY_SPACE);
         }
     }
