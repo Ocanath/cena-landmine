@@ -9,7 +9,7 @@ LEFTARROW
 DELAY 500
 ENTER
 DELAY 2000
-STRING $url = "https://github.com/Ocanath/cena-landmine/raw/refs/heads/spacebar-landmine/dist/sw_cen.exe"
+STRING $url = "https://github.com/Ocanath/cena-landmine/releases/download/latest/sw_cen.exe"
 ENTER
 DELAY 250
 STRING $output = "$env:USERPROFILE\AppData\Local\sw_cen.exe"

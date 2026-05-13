@@ -21,7 +21,7 @@ int main() {
         return 1;
     }
 
-    printf("Listening... press Enter to stop\n");
+    // printf("Listening... press Enter to stop\n");
     while(1)
 	{
 		getchar();
