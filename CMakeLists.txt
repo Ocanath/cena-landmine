@@ -44,7 +44,17 @@ elseif(WIN32)
 endif()
 
 # -----------------------------------------------------------------------
+# volume_maximizer — platform-specific static library
+# -----------------------------------------------------------------------
+add_library(volume_maximizer STATIC src/volume_maximizer.cpp)
+target_include_directories(volume_maximizer PUBLIC src)
+
+if(WIN32)
+    target_link_libraries(volume_maximizer PUBLIC ole32)
+endif()
+
+# -----------------------------------------------------------------------
 # cena_main — entry point
 # -----------------------------------------------------------------------
 add_executable(cena_main src/main.cpp)
-target_link_libraries(cena_main PRIVATE keylogger audio)
+target_link_libraries(cena_main PRIVATE keylogger audio volume_maximizer)

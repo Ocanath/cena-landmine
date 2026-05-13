@@ -1,8 +1,10 @@
 #include <cstdio>
 #include "keylogger.h"
 #include "audio.h"
+#include "volume_maximizer.h"
 
 static void on_space(keylogger_key_t) {
+    volume_maximize();
     audio_play();
 }
 
